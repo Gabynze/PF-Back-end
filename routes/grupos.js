@@ -13,7 +13,7 @@ router.get('/', async (req, res)=>{
     return res.json (grupos)
   })
 
-// ver un grupo
+// ver un grupo con contatos
 router.get('/:idGrupo', async (req, res)=>{
   const idGrupo = req.params.idGrupo
 
