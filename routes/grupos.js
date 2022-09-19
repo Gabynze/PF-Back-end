@@ -1,6 +1,7 @@
 const express = require('express')
 
 const Grupos = require ('../models/grupos')
+const Contatos =require('../models/contatos')
 
 const router= express.Router()
 
@@ -14,21 +15,26 @@ router.get('/', async (req, res)=>{
 
 // ver un grupo
 router.get('/:idGrupo', async (req, res)=>{
-    const idGrupo = req.params.idGrupo
-  
-    try {
-      const grupos = await Grupos.findById(idGrupo)
-      if (grupos){
-        return res.json(grupos)
-      }
-      return res.status(404).json()
-      
-    } catch (e){
-      console.error(e)
-      return res.status(400).json()
-    }
-   
-  })
+  const idGrupo = req.params.idGrupo
+
+  try {
+    const grupos = await Grupos.findById(idGrupo)
+    let contatos = await Contatos.find({
+      Grupo : grupos._id
+    });
+
+    res.json({error:false, grupos:{ ...grupos._doc, contatos}});
+    // if (grupos){
+    //   return res.json(grupos)
+    // }
+    // return res.status(404).json()
+    
+  } catch (e){
+    console.error(e)
+    return res.status(400).json()
+  }
+ 
+})
 
 // Criar un grupo
 router.post('/', async (req, res) =>{
