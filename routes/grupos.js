@@ -23,7 +23,7 @@ router.get('/:idGrupo', async (req, res)=>{
       Grupo : grupos._id
     });
 
-    res.json({error:false, grupos:{ ...grupos._doc, contatos}});
+   res.json (contatos);
     // if (grupos){
     //   return res.json(grupos)
     // }
