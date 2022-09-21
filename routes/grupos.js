@@ -13,7 +13,7 @@ router.get('/', async (req, res)=>{
     return res.json (grupos)
   })
 
-// ver un grupo con contatos
+// ver um grupo con contatos
 router.get('/:idGrupo', async (req, res)=>{
   const idGrupo = req.params.idGrupo
 
@@ -24,19 +24,14 @@ router.get('/:idGrupo', async (req, res)=>{
     });
 
    res.json (contatos);
-    // if (grupos){
-    //   return res.json(grupos)
-    // }
-    // return res.status(404).json()
     
   } catch (e){
     console.error(e)
     return res.status(400).json()
   }
- 
 })
 
-// Criar un grupo
+// Criar um grupo
 router.post('/', async (req, res) =>{
     const Grupo = req.body.Grupo
     
@@ -53,7 +48,7 @@ router.post('/', async (req, res) =>{
     return res.status(201).json()
   })
 
-// Editar un grupo
+// Editar um grupo
 router.put('/:idGrupo', async (req, res)=>{
     const idGrupo = req.params.idGrupo
 
@@ -66,10 +61,8 @@ router.put('/:idGrupo', async (req, res)=>{
            Grupo
         })
         await grupos. save()
-        // return res.json(contatos)
       }
-      return res.status(200).json(grupos)
-      
+      return res.status(200).json(grupos)    
       
     } catch (e){
       console.error(e)
@@ -77,18 +70,23 @@ router.put('/:idGrupo', async (req, res)=>{
     }
   })
 
-// Deletar un grupo
+// Deletar um grupo e contatos do grupo
 router.delete ('/:idGrupo', async (req, res)=>{ 
     const idGrupo = req.params.idGrupo
   
     try {
       const grupos = await Grupos.findById(idGrupo)
-      if (grupos){
-        await grupos.delete()
-        return res.json({ msg: "Grupo deletado com sucesso"})
-      }
-      return res.json()
-      
+      let contatos = await Contatos.find({
+          Grupo : grupos._id
+      });
+        if (grupos){
+            await grupos.delete()
+        }
+        contatos.forEach(async(contato)=>{
+            await contato.delete();
+        })
+        return res.json()
+             
     } catch (e){
       console.error(e)
       return res.status(400).json()
